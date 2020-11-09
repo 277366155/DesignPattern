@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using Dapper;
+using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,12 +9,12 @@ namespace Repositorys.TCC
 {
     public abstract class BaseRepository<T>
     {
-        protected abstract string dbName { get; set; }
+        protected abstract string GetDBName();
         public string DbPath
         {
             get
             {
-                return Environment.CurrentDirectory + "/AppData/" + dbName;
+                return "data source=" + Environment.CurrentDirectory + "/AppData/" + GetDBName();
             }
         }
 
@@ -26,60 +27,36 @@ namespace Repositorys.TCC
             }
             try
             {
-                var cmd = db.CreateCommand();
-                cmd.CommandText = GetInsertSql(model);
-                cmd.Transaction = tran;
-                var insertResult = cmd.ExecuteNonQuery();
+                var sql = GetInsertSql(model.GetType());
+                var insertResult = db.Execute(sql,model,tran);
                 if (insertResult > 0)
                 {
-                    cmd.CommandText = $"select last_insert_rowid() from  `{typeof(T).Name.ToLower()}` ";
-                    var dr = cmd.ExecuteReader();
-                    if (dr.Read())
-                    {
-                        masterId = dr.GetInt32(0);
-                    }
+                    masterId= db.QueryFirst<int>($"select last_insert_rowid() from  `{typeof(T).Name.ToLower()}`; ");
                 }
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }
         }
 
-        private string GetInsertSql<T>(T model)
+        private string GetInsertSql(Type type)
         {
-            var sql = $"insert into `{typeof(T).Name.ToLower()}` ";
+            var sql = $"insert into `{type.Name.ToLower()}` ";
             var columns = new StringBuilder();
-            var values = new StringBuilder();
+            var paramStrBuild= new StringBuilder();
 
-            foreach (var p in typeof(T).GetProperties())
+            foreach (var p in type.GetProperties())
             {
                 if (p.Name.ToLower() == "id")
                 {
                     continue;
                 }
                 columns.Append($"`{p.Name}`,");
-                var pValue = p.GetValue(model);
-                if (pValue == null)
-                {
-                    values.Append($"  null ,");
-                }
-                else
-                {
-                    switch (pValue.GetType().Name.ToLower())
-                    {
-                        case "string":
-                        case "datetime":
-                            values.Append($"'{pValue}',");
-                            break;
-                        default:
-                            values.Append($" {pValue} ,");
-                            break;
-                    }
-                }
+                paramStrBuild.Append($"@{p.Name},");
             }
-            sql += $"({columns.ToString().TrimEnd(',')}) value ({values.ToString().TrimEnd(',')});";
+            sql += $"({columns.ToString().TrimEnd(',')}) values ({paramStrBuild.ToString().TrimEnd(',')});";
             return sql;
         }
     }
