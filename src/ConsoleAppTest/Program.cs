@@ -1,5 +1,6 @@
 ﻿using ConsoleAppTest.DesignPatterns;
 using System;
+using static ConsoleAppTest.DesignPatterns.Template;
 
 namespace ConsoleAppTest
 {
@@ -7,8 +8,8 @@ namespace ConsoleAppTest
     {
         static void Main(string[] args)
         {
-           
 
+            TemplateTest();
             Console.ReadLine();
         }
 
@@ -19,6 +20,14 @@ namespace ConsoleAppTest
         {
             var animalStrategy = new Strategy("旺财", 3, Services.AnimalEnum.Dog);
             animalStrategy.AnimalShout();
+        }
+
+        static void TemplateTest()
+        {
+            Car car = new Car1();
+            car.CarRun();
+            car = new Car2();
+            car.CarRun();
         }
     }
 }
