@@ -1,4 +1,5 @@
 ﻿using ConsoleAppTest.DesignPatterns;
+using Repositorys.TCC;
 using System;
 using static ConsoleAppTest.DesignPatterns.Template;
 
@@ -9,7 +10,9 @@ namespace ConsoleAppTest
         static void Main(string[] args)
         {
 
+
             TemplateTest();
+
             Console.ReadLine();
         }
 
@@ -22,12 +25,19 @@ namespace ConsoleAppTest
             animalStrategy.AnimalShout();
         }
 
+
         static void TemplateTest()
         {
             Car car = new Car1();
             car.CarRun();
             car = new Car2();
             car.CarRun();
+        }
+
+        static void TCCTest()
+        {
+            var animalService = new AnimalService();
+            animalService.InsertAllDbTCC();
         }
     }
 }

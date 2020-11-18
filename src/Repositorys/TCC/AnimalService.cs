@@ -2,29 +2,20 @@
 
 namespace Repositorys.TCC
 {
-    public class AnimalRepository : BaseRepository<AnimalModel>
+    public class AnimalRepository : BaseRepository<Animal>
     {
-        private string _dbName;
-        protected override string dbName
+        protected override string GetDBName()
         {
-            get => _dbName;
-            set
-            {
-                _dbName = "animal.db";
-            }
+            return "animal.db";
         }
     }
 
-    public class AnimalDetailRepository : BaseRepository<AnimalDetailModel>
+    public class AnimalDetailRepository : BaseRepository<AnimalDetail>
     {
         private string _dbName;
-        protected override string dbName
+        protected override string GetDBName()
         {
-            get => _dbName;
-            set
-            {
-                _dbName = "animaldetail.db";
-            }
+            return "animaldetail.db";
         }
     }
 
@@ -35,12 +26,12 @@ namespace Repositorys.TCC
 
         public bool InsertAllDbTCC()
         {
-            var animal = new AnimalModel { Name = "cat1", Age = 1, TypeName = "cat" };
+            var animal = new Animal { Name = "cat1", Age = 1, TypeName = "cat" };
             var animalConn = new SqliteConnection(animalRep.DbPath);
             animalConn.Open();
             var animalTran = animalConn.BeginTransaction();
 
-            var animalDetail = new AnimalDetailModel { Remark = "this is cat1's remark" };
+            var animalDetail = new AnimalDetail { Remark = "this is cat1's remark" };
             var animalDetailConn = new SqliteConnection(animalDetailRep.DbPath);
             animalDetailConn.Open();
             var animalDetailTran = animalDetailConn.BeginTransaction();

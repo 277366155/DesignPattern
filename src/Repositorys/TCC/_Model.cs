@@ -1,6 +1,6 @@
 ﻿namespace Repositorys.TCC
 {
-    public class AnimalModel
+    public class Animal
     {
         public int Id { get; set; }
         public string TypeName { get; set; }
@@ -9,7 +9,7 @@
     }
 
 
-    public class AnimalDetailModel
+    public class AnimalDetail
     { 
         public int Id { get; set; }
 
