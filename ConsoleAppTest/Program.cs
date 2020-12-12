@@ -7,8 +7,8 @@ namespace ConsoleAppTest
     {
         static void Main(string[] args)
         {
-           
 
+            StrategyTest();
             Console.ReadLine();
         }
 
