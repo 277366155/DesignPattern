@@ -21,10 +21,14 @@ namespace ConsoleAppTest
         static void DecoratorTest()
         {
             var decorator = new Decorator();
-            //吃饭喝水喝酒睡觉的顺序，可以根据需要进行调整或删减。
-            decorator.DrinkWater();
-            decorator.Eat();
-            decorator.Sleep();
+            //吃鸡肉，米饭，苹果的顺序，可以根据需要进行调整或删减。
+            var chicken = new Chicken();
+            var rice = new Rice();
+            var apple = new Apple();
+
+            rice.Decorate(chicken);            
+            apple.Decorate(rice);
+            apple.Show();
         }
 
         /// <summary>

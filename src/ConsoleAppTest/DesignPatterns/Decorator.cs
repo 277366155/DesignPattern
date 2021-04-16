@@ -1,32 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleAppTest.DesignPatterns
 {
+
+    public abstract class Food
+    {
+        public abstract void Show();
+    }
+
     /// <summary>
     /// 装饰器模式
     /// </summary>
-    public class Decorator
+    public class Decorator : Food
     {
-        public void Eat()
+        protected Food _food;
+        public void Decorate(Food food)
         {
-            Console.WriteLine("吃饭.");
+            _food = food;
         }
-
-        public void Drink()
+        public override void Show()
         {
-            Console.WriteLine("喝酒.");
+            if (_food != null)
+            {
+                _food.Show();
+            }
         }
+    }
 
-        public void DrinkWater()
+    public class Chicken : Decorator
+    {
+        public override void Show()
         {
-            Console.WriteLine("喝水.");
+            base.Show();
+            Console.WriteLine("鸡肉。");            
         }
-
-        public void Sleep()
+    }
+    public class Apple : Decorator
+    {
+        public override void Show()
         {
-            Console.WriteLine("睡觉.");
+            base.Show();
+            Console.WriteLine("苹果。");            
+        }
+    }
+    public class Rice : Decorator
+    {
+        public override void Show()
+        {
+            base.Show();
+            Console.WriteLine("大米。");           
         }
     }
 }
